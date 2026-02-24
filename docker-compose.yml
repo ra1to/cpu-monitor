@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile.backend
+    # ホストPCのシステム情報をコンテナに繋ぐ「魔法」の設定
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    environment:
+      # Goのライブラリ(gopsutil)に「ホストの情報はここにあるよ」と教える設定
+      - HOST_PROC=/host/proc
+      - HOST_SYS=/host/sys
+    network_mode: "host"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.frontend
+    ports:
+      - "3000:3000"
